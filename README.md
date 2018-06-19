@@ -1,37 +1,52 @@
 # minishift-local-poc
 
 # TL;DR:
-* Overview/Summary
-** Wrote these scripts internally for Minishift PaaS POC and to work around docker for mac registry bug, etc. so we used the Minishift docker context to pull AWS ECR docker images into Minishift and deploy our apps.
-
+# Overview/Summary
 * Creates LOCAL ENV minishift origin local cluster on MacOS / OSX with each requisite platform app/namespace created with child wrapper scripts.
+
+* Overview
+    * uses the Minishift docker context
+    * pulls private AWS ECR repo docker images into Minishift registry
+    * creates, configures, and deploys our requisite projects/NS/apps.
+    * works around docker for mac registry bug, etc.
+
+# Deployment
+* Edit the child create-myappN-local-minishift.sh scripts as needed.
+* Execute the parent script
 ```
 MINISHIFT-POC-LOCAL-DEPLOY.sh
 ```
 
-# The above parent script will then call/create all requisite myapp1 components into local project/namespaces and will then deploy all myapp1 platform components, etc.
-* create-myapp1-local-minishift.sh
-* create-myapp2-local-minishift.sh
-* create-myapp3-local-minishift.sh
+* The parent script calls child project/namespace/app wrapper creation scripts
+    * create-myapp1-local-minishift.sh
+    * create-myapp2-local-minishift.sh
+    * create-myapp3-local-minishift.sh
 
-# For our use case, we're working locally with minishift, pulling from remote private AWS ECR repos, tagging and pushing our images to the remote (Openshift / Minishift registry--AFAIK, minishift still considers this to be a remote) docker registry. 
-
-* I had found another blog post from last year where they needed to use secrets else they were getting the permission denied errors (as was I) so set those up, and automated that process as well.  I'm not sure if that's the correct "Openshift/Minishift way," but it works for us so I went with it.
-
-* This POC/DEV solution configures a minishift cluster with requisite configs such that future starts can just be `minishift start` and it will use the default profile configurations specified in the script.  
+* This POC/DEV solution configures a minishift cluster with requisite configs such that future starts can just be `minishift start` and it will use the default profile configurations specified in the script.
 * Then the parent script spawns child script/processes--each child script/process configures requisite apps for our platform in separate minishift project/namespaces--with each app pulling/tagging their requisite docker images from private AWS ECR repo and pushing into the Minishift docker registry--i.e.:
 ```
 docker push 172.30.1.1:5000/myapp1-local/myapp
 ```
 
-# From my experience, the virtualbox driver just worked--(seem recall some other drivers missing plugins, configurations, etc.) so went with that.  JIC, my script will install the requisite minishift plugins, enable them, and also set admin creds--this should only be used in DEV.
-It configures the driver to be virtualbox as the default, but you can easily change that as you wish.
-I will take some code and create a smaller public repo so others can test/validate.  YMMV, but it works for us :-)
+# For our use case
+* we're working locally with minishift
+* pulling from remote private AWS ECR repos
+* tagging and pushing our images to the Minishift registry--AFAIK, minishift still considers this to be a remote docker registry. 
+* The virtualbox driver just worked for us
+    * I seem recall some other drivers missing plugins, configurations, etc., so just went with the VB driver as the default, but this can easily be changed.
+    * JIC, the script will install the requisite minishift plugins, enable them, and also set admin creds
+
+# Secrets and permission denied errors
+* I had found another blog post from last year where they needed to use secrets else they were getting the permission denied errors (as was I) so set those up, and automated that process as well.  I'm not sure if that's the correct "Openshift/Minishift way," but it works for us so I went with it.
+
+# Notes 
+* This is a POC and suitable only for local/dev env's.
 
 # Parent script stdout
 ```
 $ minishift status
 Does Not Exist
+
 ./local/bin/MINISHIFT-LOCAL-POC-DEPLOY.sh
 No Minishift instance exists. New 'memory' setting will be applied on next 'minishift start'
 No Minishift instance exists. New 'cpus' setting will be applied on next 'minishift start'
