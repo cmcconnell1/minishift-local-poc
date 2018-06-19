@@ -1,10 +1,7 @@
 # minishift-local-poc
 
-# TL;DR:
 # Overview/Summary
 * Creates LOCAL ENV minishift origin local cluster on MacOS / OSX with each requisite platform app/namespace created with child wrapper scripts.
-
-* Overview
     * uses the Minishift docker context
     * pulls private AWS ECR repo docker images into Minishift registry
     * creates, configures, and deploys our requisite projects/NS/apps.
@@ -17,16 +14,17 @@
 MINISHIFT-POC-LOCAL-DEPLOY.sh
 ```
 
-* The parent script calls child project/namespace/app wrapper creation scripts
-    * create-myapp1-local-minishift.sh
-    * create-myapp2-local-minishift.sh
-    * create-myapp3-local-minishift.sh
+* Details
+    * The parent script calls child project/namespace/app wrapper creation scripts
+        * create-myapp1-local-minishift.sh
+        * create-myapp2-local-minishift.sh
+        * create-myapp3-local-minishift.sh
 
-* This POC/DEV solution configures a minishift cluster with requisite configs such that future starts can just be `minishift start` and it will use the default profile configurations specified in the script.
-* Then the parent script spawns child script/processes--each child script/process configures requisite apps for our platform in separate minishift project/namespaces--with each app pulling/tagging their requisite docker images from private AWS ECR repo and pushing into the Minishift docker registry--i.e.:
-```
-docker push 172.30.1.1:5000/myapp1-local/myapp
-```
+    * This POC/DEV solution configures a minishift cluster with requisite configs such that future starts can just be `minishift start` and it will use the default profile configurations specified in the script.
+    * Then the parent script spawns child script/processes--each child script/process configures requisite apps for our platform in separate minishift project/namespaces--with each app pulling/tagging their requisite docker images from private AWS ECR repo and pushing into the Minishift docker registry--i.e.:
+        ```
+        docker push 172.30.1.1:5000/myapp1-local/myapp
+        ```
 
 # For our use case
 * we're working locally with minishift
@@ -42,7 +40,7 @@ docker push 172.30.1.1:5000/myapp1-local/myapp
 # Notes 
 * This is a POC and suitable only for local/dev env's.
 
-# Parent script stdout
+# Parent script stdout shows MS version, config, steps, etc.
 ```
 $ minishift status
 Does Not Exist
@@ -136,7 +134,7 @@ To see projects on another server, pass '--server=<server>'.
 ```
 
 # After all child wrapper NS/projects are completed
-* take a look at your myapp{1..n}
+* Validate your myapp{1..n}
 ```
 oc get all -n myapp1-local
 NAME                      REVISION   DESIRED   CURRENT   TRIGGERED BY
