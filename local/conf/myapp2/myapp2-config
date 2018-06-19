@@ -1,0 +1,5 @@
+# MYAPP2 VARS
+LOGLEVEL_FOO="DEBUG"
+API_PORT=9000
+REDIS_HOST="somewhere124.cache.amazonaws.com"
+REDIS_PORT=6379
